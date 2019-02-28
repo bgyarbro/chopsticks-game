@@ -28,26 +28,49 @@ endStates = np.asarray([[0,0,1,0,0],
 
 #print(endStates[endStates[:,0] == 0])
 
-def main(L, W, n):
-    tempL = L[L[:,0] == 0]
+
+def main(L, W, n, z):
+    #print("this is z")
+    #print(z)
+
+    tempL = L[L[:,0] == 0] # for the first run these are all the end states, and they have not been checked
+    ##print(n)
+    ##print("TempL")
+    ##print(tempL)
+
+    ##print("tempHands")
+
+    # from the unchecked Losing States, find all the previous Winning States
+    ii = 0
     for state in tempL :
-        tempHands = findPrevWinning(state)
+        tempHands = findPrevWinning(state) #checked
+
+        #print(ii)
+        #print(tempHands)
+
+        ####################################################################################################
         #if W.shape == (5,) : # if W.shape == (0,)
         #    W = np.concatenate((W, tempHands)) # W = tempHands
-        if W.shape == (0,) :
-            W = tempHands
-        elif len(tempHands) == 1:
-            if not (W == tempHands):
-                W = np.concatenate((W, tempHands))
-        else:
-            for hands in tempHands:
+        #####################################################################################################
+
+        #                                                                       # add the found hands to W if they are not already in W
+        #if W.shape == (0,):                                                        # this is the case for the first loop, when W is empty
+        if z == 0 and ii == 0:
+            W = tempHands                                                       # initialize W, this should only be for the first time
+        elif len(tempHands) == 1:                                                   # if there is only one gamestate in tempHands
+            if not (W == tempHands):                                                    # if tempHands is not in W then...
+                W = np.concatenate((W, tempHands))                                          # add tempHands to W
+        else:                                                                   # if this is not the first run, and there is more than 1 gamestate in tempHands
+            for hands in tempHands:                                                 # loop through the gamestates produced for the state in tempL
                 #print(hands)
-                if not (W == hands).all(1).any():
+                if not (W == hands).all(1).any():                                       # if the gamestate is not in W, then...
                     #print("test")
-                    W = np.concatenate((W, [hands]))
+                    W = np.concatenate((W, [hands]))                                        # add the gamestate to W
             #for i in range(0,len(tempHands)):
             #    if not (W == tempHands[i]).all(1).any():
             #        W = np.concatenate((W, tempHands[i]))
+
+        ii += 0
 
         #if W.any() == False:
         #    W = np.concatenate((W, tempHands))
@@ -63,7 +86,7 @@ def main(L, W, n):
             #    else (W == tempHands).all(1).any() == False:
             #        W = np.concatenate((W, tempHands))
 
-    L[:,0] = 1 # Mark the Losing States as Checked
+    L[:,0] = 1                                                                  # Mark the Losing States as Checked
 
     #-----------------------------------------So far, so good------------------------#
     #print("This is W after the first run")
@@ -123,10 +146,12 @@ def main(L, W, n):
         confirmed[:,0] = 0
         L = np.concatenate((L, confirmed))
 
-    print("winning")
-    print(W)
-    print("losing")
-    print(L)
+    #print("winning")
+    #print(W)
+    #print("losing")
+    #print(L)
+
+    z += 1
 
     if (W == startingHands).all(1).any():
         print("Player 1 Wins")
@@ -134,19 +159,25 @@ def main(L, W, n):
         print("Player 2 Wins")
     elif n < 100:
         print("round " + str(n))
-        main(L, W, n+1)
+        main(L, W, n+1, z)
 
-def findPrevWinning(hands):
+
+# hands looks like [checked/unchecked (0) , p1 left (1) , p1 right (2) , p2 left (3) , p2 right (4) ]
+
+def findPrevWinning(hands): # this function has been double checked
     prev = []
     if hands[1] != 0 : # check if P1 left hand is zero
-        if (hands[3] - hands[1]) % 5 != 0 : # check if p1 would play onto P2 left hand zero
+        if hands[1] != hands[3]: # check if p1 would play onto P2 left hand zero
             prev.append([0,hands[1],hands[2],(hands[3] - hands[1]) % 5,hands[4]]) # P1 Right hand play onto P2 left hand to win
-        if (hands[4] - hands[1]) % 5 != 0 : # check that p2 hand was not zero
+        #if (hands[4] - hands[1]) % 5 != 0 : # check that p2 hand was not zero
+        if hands[1] != hands[4]: # check that p2 hand was not zero
             prev.append([0,hands[1],hands[2],hands[3],(hands[4] - hands[1]) % 5]) # p1 right hand play onto p2 right hand to win
     if hands[2] != 0 : # check if p1 right hand is zero
-        if (hands[3] - hands[2]) % 5 != 0 : # check that p2 hand was not zero
+        #if (hands[3] - hands[2]) % 5 != 0 : # check that p2 hand was not zero
+        if hands[2] != hands[3]: # check that p2 hand was not zero
             prev.append([0,hands[1],hands[2],(hands[3] - hands[2]) % 5,hands[4]]) # p1 left hand play onto p2 left hand to win
-        if (hands[4] - hands[2]) % 5 != 0 : # check that p2 hand was not zero
+        #if (hands[4] - hands[2]) % 5 != 0 : # check that p2 hand was not zero
+        if hands[2] != hands[4]: # check that p2 hand was not zero
             prev.append([0,hands[1],hands[2],hands[3],(hands[4] - hands[2]) % 5]) # p1 left hand play onto p2 right hand to win
     return np.asarray(prev)
 
@@ -199,6 +230,6 @@ winning = np.asarray([])
 
 startingHands = np.asarray([[1,1,1,1,1]])
 
-main(endStates, winning, 1)
+main(endStates, winning, 1, 0)
 
 #print(winning.shape)
