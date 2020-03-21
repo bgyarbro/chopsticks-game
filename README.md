@@ -1,6 +1,7 @@
 # chopsticks
-chopsticks simple combinatorial game implemented in Python.  User can play against a monte carlo search tree algorithm,
-or have the computer play one algorithm against another, with the option for random move choice.
+chopsticks simple combinatorial game implemented in Python.  Using the command line interface,
+User can play against a monte carlo search tree algorithm, or have the computer play one algorithm
+against another, with the option for random move choice.
 
 Here are the rules to the game.
 https://en.wikipedia.org/wiki/Chopsticks_(hand_game)
