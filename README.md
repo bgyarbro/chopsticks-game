@@ -1,7 +1,7 @@
 # chopsticks
 Reinforcement Learning
 
-To run the code, open the file ending in "_colab"
+To try out the game, go here https://colab.research.google.com/github/bgyarbro/chopsticks/blob/master/chopsticks_colab.ipynb
 
 chopsticks simple combinatorial game implemented in Python.  Using the command line interface,
 User can play against a monte carlo search tree algorithm, or have the computer play one algorithm
