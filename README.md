@@ -7,8 +7,16 @@ chopsticks simple combinatorial game implemented in Python.  Using the command l
 User can play against a monte carlo search tree algorithm, or have the computer play one algorithm
 against another, with the option for random move choice.
 
+Better documentation to come.
+
 Here are the rules to the game.
 https://en.wikipedia.org/wiki/Chopsticks_(hand_game)
+
+Hand representation.
+Player 1 [left hand, right hand]
+Player 2 [left hand, right hand]
+
+GUI in development.
 
 The code for the game was adapted from the tic-tac-toe example in this book. Book here.
 
